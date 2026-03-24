@@ -1,9 +1,26 @@
+cat > README.md << 'EOF'
 # SecurityKit
 
 A Swift Package demonstrating **multi-target package architecture**, **Keychain storage**, and **jailbreak detection** — built as a learning exercise and portfolio piece.
 
-## Package structure
+## Screenshots
 
+<table>
+  <tr>
+    <td align="center"><b>Home</b></td>
+    <td align="center"><b>Save</b></td>
+    <td align="center"><b>Retrieve</b></td>
+    <td align="center"><b>Delete</b></td>
+  </tr>
+  <tr>
+    <td><img src="demo_screenshots/Simulator%20Screenshot%20-%20iPhone%2017%20Pro%20-%202026-03-24%20at%2023.24.05.png" width="180"></td>
+    <td><img src="demo_screenshots/Simulator%20Screenshot%20-%20iPhone%2017%20Pro%20-%202026-03-24%20at%2023.24.15.png" width="180"></td>
+    <td><img src="demo_screenshots/Simulator%20Screenshot%20-%20iPhone%2017%20Pro%20-%202026-03-24%20at%2023.24.19.png" width="180"></td>
+    <td><img src="demo_screenshots/Simulator%20Screenshot%20-%20iPhone%2017%20Pro%20-%202026-03-24%20at%2023.24.22.png" width="180"></td>
+  </tr>
+</table>
+
+## Package structure
 ```
 SecurityKit/
 ├── Package.swift
@@ -18,15 +35,15 @@ SecurityKit/
 ├── Tests/
 │   └── SecurityKitTests/
 │       └── SecurityKitTests.swift
-└── Examples/
-    └── ContentView.swift         ← SwiftUI demo app view
+├── Examples/
+│   └── SecurityKitDemoApp/       ← SwiftUI demo app
+└── demo_screenshots/
 ```
 
 ## Features
 
 ### `SecureStorage`
 Stores and retrieves sensitive string values in the iOS Keychain with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`.
-
 ```swift
 let storage = SecureStorage()
 
@@ -42,12 +59,10 @@ storage.delete(forKey: "com.myapp.accessToken")
 
 ### `DeviceIntegrity`
 Heuristic jailbreak detection using filesystem and sandbox checks.
-
 ```swift
 let integrity = DeviceIntegrity()
 
 if integrity.isCompromised {
-    // Restrict sensitive features, log to analytics, warn the user
     print(integrity.statusMessage) // "⚠️ Device integrity check failed"
     print(integrity.riskLevel)     // RiskLevel.high
 }
@@ -60,9 +75,8 @@ if integrity.isCompromised {
 - Xcode 15+
 
 ## Installation (Swift Package Manager)
-
 ```
-https://github.com/YOUR_USERNAME/SecurityKit
+https://github.com/ThulaniMtetwa/SecurityKit
 ```
 
 File → Add Package Dependencies → paste URL → choose version rule.
@@ -70,18 +84,18 @@ File → Add Package Dependencies → paste URL → choose version rule.
 ## Running the example app
 
 1. Open `Package.swift` in Xcode
-2. Create a new iOS App project in `Examples/SecurityKitDemoApp/`
-3. In the new project: **File → Add Package Dependencies → Add Local…** → select the `SecurityKit` folder
-4. Link `SecurityKit` library to your app target
-5. Replace `ContentView.swift` with the provided `Examples/ContentView.swift`
+2. In the new project: **File → Add Package Dependencies → Add Local…** → select the `SecurityKit` folder
+3. Link `SecurityKit` library to your app target under **General → Frameworks**
+4. Run on simulator
 
 ## Architecture notes
 
 The two-target split (`SecurityKitCore` + `SecurityKit`) demonstrates the **internal/public boundary pattern** in SPM:
-- `SecurityKitCore` contains raw implementations that are intentionally `internal`
-- `SecurityKit` wraps Core and exposes a clean, stable public API
+- `SecurityKitCore` contains raw implementations marked `package` — visible across targets within this package, but never exported to consumers
+- `SecurityKit` wraps Core and exposes a clean, stable `public` API
 - Consumers can only `import SecurityKit` — they never see Core internals
 
 ## License
 
 MIT
+EOF
