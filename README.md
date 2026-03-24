@@ -1,4 +1,4 @@
-cat > README.md << 'EOF'
+
 # SecurityKit
 
 A Swift Package demonstrating **multi-target package architecture**, **Keychain storage**, and **jailbreak detection** — built as a learning exercise and portfolio piece.
@@ -98,4 +98,3 @@ The two-target split (`SecurityKitCore` + `SecurityKit`) demonstrates the **inte
 ## License
 
 MIT
-EOF
